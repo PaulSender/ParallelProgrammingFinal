@@ -81,17 +81,26 @@ void printArray(int A[], int size)
 } 
   
 /* Driver program to test above functions */
-int main() 
+int main(int argc, char **argv) 
 { 
-    int arr[] = { 12, 11, 13, 5, 6, 7 }; 
-    int arr_size = sizeof(arr) / sizeof(arr[0]); 
-  
+    if(argc < 2){
+        printf("Please give the number of elements you would like to sort and try again.\n");
+        return 0;
+    }
+    else{
+        int n = atoi(argv[1]);
+        int *arr =(int *)malloc(n*sizeof(int));
+        for(int i = 0; i < n; i++){
+            int random_number = rand() % 100 + 1;
+            arr[i] = random_number;
+        }
     printf("Given array is \n"); 
-    printArray(arr, arr_size); 
+    printArray(arr, n); 
   
-    mergeSort(arr, 0, arr_size - 1); 
+    mergeSort(arr, 0, n - 1); 
   
     printf("\nSorted array is \n"); 
-    printArray(arr, arr_size); 
+    printArray(arr, n); 
     return 0; 
+    }
 } 

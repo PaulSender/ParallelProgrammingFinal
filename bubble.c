@@ -1,5 +1,6 @@
 // C program for implementation of Bubble sort 
 #include <stdio.h> 
+#include <stdlib.h>
   
 void swap(int *xp, int *yp) 
 { 
@@ -27,15 +28,29 @@ void printArray(int arr[], int size)
     for (i=0; i < size; i++) 
         printf("%d ", arr[i]); 
     printf("\n"); 
-} 
+}
+
+
   
 // Driver program to test above functions 
-int main() 
+int main(int argc, char **argv) 
 { 
-    int arr[] = {64, 34, 25, 12, 22, 11, 90}; 
-    int n = sizeof(arr)/sizeof(arr[0]); 
-    bubbleSort(arr, n); 
-    printf("Sorted array: \n"); 
-    printArray(arr, n); 
-    return 0; 
+    if(argc < 2){
+        printf("Please give the number of elements you would like to sort and try again.\n");
+        return 0;
+    }
+    else{
+        int n = atoi(argv[1]);
+        int *arr =(int *)malloc(n*sizeof(int));
+        for(int i = 0; i < n; i++){
+            int random_number = rand() % 100 + 1;
+            arr[i] = random_number;
+        }
+        printf("Starting array: \n");
+        printArray(arr, n); 
+        bubbleSort(arr, n); 
+        printf("Sorted array: \n"); 
+        printArray(arr, n); 
+        return 0; 
+    }
 } 

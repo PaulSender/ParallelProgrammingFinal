@@ -1,5 +1,6 @@
 /* C implementation QuickSort */
-#include<stdio.h> 
+#include <stdio.h> 
+#include <stdlib.h>
   
 // A utility function to swap two elements 
 void swap(int* a, int* b) 
@@ -61,12 +62,25 @@ void printArray(int arr[], int size)
 } 
   
 // Driver program to test above functions 
-int main() 
+int main(int argc, char **argv) 
 { 
-    int arr[] = {10, 7, 8, 9, 1, 5}; 
-    int n = sizeof(arr)/sizeof(arr[0]); 
+    if(argc < 2){
+        printf("Please give the number of elements you would like to sort and try again.\n");
+        return 0;
+    }
+    else{
+        int n = atoi(argv[1]);
+        int *arr =(int *)malloc(n*sizeof(int));
+        for(int i = 0; i < n; i++){
+            int random_number = rand() % 100 + 1;
+            arr[i] = random_number;
+        }
+    printf("Starting array:");
+    printArray(arr, n);
     quickSort(arr, 0, n-1); 
-    printf("Sorted array: n"); 
+    printf("\n");
+    printf("Sorted array: ");
     printArray(arr, n); 
     return 0; 
+    }
 } 

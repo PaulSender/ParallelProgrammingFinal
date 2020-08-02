@@ -1,10 +1,10 @@
 FCC = gcc
 LDC = gcc
-LD_FLAGS = -g 
-FLAGS = -g
-PROG = quick.cx
+LD_FLAGS = 
+FLAGS = 
+PROG = bubble.cx
 RM = /bin/rm
-OBJS = quick.o
+OBJS = bubble.o
 
 #all rule
 all: $(PROG)
