@@ -1,10 +1,10 @@
-FCC = gcc
-LDC = gcc
+FCC = mpicc
+LDC = mpicc
 LD_FLAGS = 
 FLAGS = 
-PROG = bubble.cx
+PROG = bp.cx
 RM = /bin/rm
-OBJS = bubble.o
+OBJS = bp.o
 
 #all rule
 all: $(PROG)
