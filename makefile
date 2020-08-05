@@ -2,9 +2,9 @@ FCC = mpicc
 LDC = mpicc
 LD_FLAGS = 
 FLAGS = 
-PROG = bp.cx
+PROG = qp.cx
 RM = /bin/rm
-OBJS = bp.o
+OBJS = qp.o
 
 #all rule
 all: $(PROG)
@@ -16,4 +16,4 @@ $(PROG): $(OBJS)
 	$(FCC) $(FLAGS) -c $<
 
 clean:
-	$(RM) -rf *.o $(PROG) *.mod
+	$(RM) -rf *.o $(PROG) *.mod out.*
