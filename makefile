@@ -2,9 +2,9 @@ FCC = mpicc
 LDC = mpicc
 LD_FLAGS = 
 FLAGS = 
-PROG = bp.cx
+PROG = mp.cx
 RM = /bin/rm
-OBJS = bp.o
+OBJS = mp.o
 
 #all rule
 all: $(PROG)

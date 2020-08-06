@@ -10,12 +10,12 @@ void swap(int *xp, int *yp)
 } 
   
 // A function to implement bubble sort 
-void bubbleSort(int arr[], int myStart, int myEnd) 
+void bubbleSort(int arr[], int split) 
 { 
    int i, j; 
-   for (i = myStart; i < myEnd-1; i++)       
+   for (i = 0; i < split-1; i++)       
        // Last i elements are already in place    
-       for (j = 0; j < myStart-i-1; j++)  
+       for (j = 0; j < split-i-1; j++)  
            if (arr[j] > arr[j+1]) 
               swap(&arr[j], &arr[j+1]); 
 } 
@@ -29,7 +29,7 @@ void printArray(int arr[], int size)
     printf("\n"); 
 }
 
-int main (int argc, char **argv){
+void main (int argc, char **argv){
 
 	int numranks, rank, rc;
 	// initialize MPI
@@ -38,46 +38,68 @@ int main (int argc, char **argv){
 	MPI_Comm_rank(MPI_COMM_WORLD,&rank);
 	if(rank == 0){
 		if(argc < 2){
-     		printf("Please give the number of elements you would like to sort and try again.\n");
+     			printf("Please give the number of elements you would like to sort and try again.\n");
 			MPI_Finalize();
-        	return 0;
+        	
     	}
 	}
-    	
-    int n = atoi(argv[1]);
-    int *arr = (int *)malloc(n*sizeof(int));
+	double startTime = MPI_Wtime();    	
+   	int n = atoi(argv[1]);
+   	int *arr = (int *)malloc(n*sizeof(int));
 	//Creating Values
 	//Decided it would be faster for every rank to do this work
 	//vs. send it over the communicator. Maybe not tho we can see
-    for(int i = 0; i < n; i++){
-        int random_number = rand() % 100 + 1;
-        arr[i] = random_number;
-        }
-	}
+    	for(int i = 0; i < n; i++){
+        	int random_number = rand() % 100 + 1;
+        	arr[i] = random_number;
+        	}
+	
 	//Splitting up the work.
 	int split = n / numranks;
 	int myStart = rank * split;
 	int myEnd = (rank+1) * split -1 ;
+
+	//Creating temp array
+	int* t =(int*)malloc(split*sizeof(int));
+
 	if(rank == numranks -1){
 		myEnd = n;
 	}
-	if(rank == 0){
-		printf("Starting array: \n");
-		printArray(arr, n); 
+	//if(rank == 0){
+	//	printf("Starting array: \n");
+	//	printArray(arr, n); 
+	//}
+	//Assigning correct values to temp array
+	int c = 0;
+	for(int i = myStart; i <= myEnd; i++){
+		t[c] = arr[i];
+		c++;
 	}
-    
-    bubbleSort(arr, myStart, myEnd); 
+	//checks
+	//printf("Before Sort from Rank: %d\n", rank);
+	//printArray(t, split);
 
-	MPI_Gather(arr, split, MPI_INT, arr, split, MPI_INT, 0, MPI_COMM_WORLD);
+	bubbleSort(t, split);
+ 
+	//printf("After Sort from Rank: %d\n", rank);
+        //printArray(t, split);
 
-	if(rank == 0){
-		printf("Sorted array: \n"); 
-    	printArray(arr, n); 
-	}
-    
-    return 0; 
-    }
+	MPI_Gather(t, split, MPI_INT, arr, split, MPI_INT, 0, MPI_COMM_WORLD);
 	
-	MPI_Finalize();
+	if(rank == 0){
+		//printf("After gather: \n");
+		//printArray(arr,n);
 
-}
+		bubbleSort(arr,n);
+
+		//printf("Sorted array: \n"); 
+    		//printArray(arr, n);
+		double endtime = MPI_Wtime();
+		printf("NumRanks: %d, Time: %.5f\n",numranks, endtime-startTime); 
+	}
+
+    free(arr);
+    MPI_Finalize();  
+   }
+
+

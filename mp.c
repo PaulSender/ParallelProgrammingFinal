@@ -1,7 +1,7 @@
 /* C program for Merge Sort */
 #include <stdio.h> 
 #include <stdlib.h> 
-  
+#include "mpi.h"  
 // Merges two subarrays of arr[]. 
 // First subarray is arr[l..m] 
 // Second subarray is arr[m+1..r] 
@@ -81,26 +81,62 @@ void printArray(int A[], int size)
 } 
   
 /* Driver program to test above functions */
-int main(int argc, char **argv) 
+void main(int argc, char **argv) 
 { 
-    if(argc < 2){
-        printf("Please give the number of elements you would like to sort and try again.\n");
-        return 0;
+    int numranks, rank;
+    // MPI INIT
+    MPI_Init(&argc,&argv);
+    MPI_Comm_size(MPI_COMM_WORLD,&numranks);
+    MPI_Comm_rank(MPI_COMM_WORLD,&rank);
+    if(rank == 0){
+    	if(argc < 2){
+        	printf("Please give the number of elements you would like to sort and try again.\n");
+       	 	MPI_Finalize();
+    	}
     }
-    else{
-        int n = atoi(argv[1]);
-        int *arr =(int *)malloc(n*sizeof(int));
-        for(int i = 0; i < n; i++){
-            int random_number = rand() % 100 + 1;
-            arr[i] = random_number;
-        }
-    printf("Given array is \n"); 
-    printArray(arr, n); 
-  
-    mergeSort(arr, 0, n - 1); 
-  
-    printf("\nSorted array is \n"); 
-    printArray(arr, n); 
-    return 0; 
+    int n = atoi(argv[1]);
+    if(n%numranks != 0){
+	printf("Please give a value for n that is divisiable by the number of ranks\n");
+        MPI_Finalize();
     }
-} 
+    int *arr =(int *)malloc(n*sizeof(int));
+    for(int i = 0; i < n; i++){
+        int random_number = rand() % 100 + 1;
+        arr[i] = random_number;
+	}
+    //Splitting up the work.
+    int split = n/numranks;
+    int myStart = rank*split;
+    int myEnd = (rank+1) * split -1;
+
+    //Creating temp array
+    int* t = (int*)malloc(split*sizeof(int));
+    
+    if(rank == numranks-1){
+	myEnd = n;
+    }
+    // Adding approperate values to temp arrays
+    int c = 0;
+    for(int i = myStart; i <= myEnd; i++){
+	t[c] = arr[i];
+        c++;
+    }    
+
+    if(rank ==0){
+    	printf("Given array is \n"); 
+    	printArray(arr, n); 
+	}
+    mergeSort(t, myStart, myEnd-1);
+
+    MPI_Gather(t, split, MPI_INT, arr, split, MPI_INT, 0, MPI_COMM_WORLD);
+
+    if(rank == 0){
+	if(numranks > 1){
+		mergeSort(arr, 0 , n-1);
+	}  
+    	printf("\nSorted array is \n"); 
+    	printArray(arr, n);
+    }
+    MPI_Finalize();
+ }
+ 
