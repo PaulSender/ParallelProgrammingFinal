@@ -1,0 +1,161 @@
+[roadhog:35289] *** Process received signal ***
+[roadhog:35289] Signal: Segmentation fault (11)
+[roadhog:35289] Signal code: Address not mapped (1)
+[roadhog:35289] Failing at address: 0x2216000
+[winston:46932] *** Process received signal ***
+[winston:46932] Signal: Segmentation fault (11)
+[winston:46932] Signal code: Address not mapped (1)
+[winston:46932] Failing at address: 0x2500000
+[lucio:15364] *** Process received signal ***
+[lucio:15364] Signal: Segmentation fault (11)
+[lucio:15364] Signal code: Address not mapped (1)
+[lucio:15364] Failing at address: 0x99c000
+[roadhog:35289] [ 0] /lib/x86_64-linux-gnu/libc.so.6(+0x354b0)[0x7fe54c5164b0]
+[roadhog:35289] [ 1] ./qp.cx[0x400cfb]
+[roadhog:35289] [ 2] ./qp.cx[0x400dad]
+[roadhog:35289] [ 3] ./qp.cx[0x400dad]
+[roadhog:35289] [ 4] ./qp.cx[0x400dad]
+[roadhog:35289] [ 5] ./qp.cx[0x400dad]
+[roadhog:35289] [ 6] ./qp.cx[0x400dad]
+[roadhog:35289] [ 7] ./qp.cx[0x400dad]
+[roadhog:35289] [ 8] ./qp.cx[0x400dad]
+[roadhog:35289] [ 9] ./qp.cx[0x400dad]
+[roadhog:35289] [10] ./qp.cx[0x400dad]
+[roadhog:35289] [11] ./qp.cx[0x400dad]
+[roadhog:35289] [12] ./qp.cx[0x400dad]
+[roadhog:35289] [13] ./qp.cx[0x400dad]
+[roadhog:35289] [14] ./qp.cx[0x400dad]
+[roadhog:35289] [winston:46932] [ 0] /lib/x86_64-linux-gnu/libc.so.6(+0x354b0)[0x7fcb752c54b0]
+[15] ./qp.cx[0x400dad]
+[roadhog:35289] [16] ./qp.cx[0x400dad]
+[roadhog:35289] [17] ./qp.cx[0x400dad]
+[roadhog:35289] [winston:46932] [ 1] ./qp.cx[0x400cfb]
+[winston:46932] [ 2] ./qp.cx[0x400dad]
+[winston:46932] [ 3] ./qp.cx[0x400dad]
+[winston:46932] [ 4] ./qp.cx[0x400dad]
+[winston:46932] [ 5] ./qp.cx[0x400dad]
+[winston:46932] [ 6] ./qp.cx[0x400dad]
+[winston:46932] [ 7] ./qp.cx[0x400dad]
+[winston:46932] [ 8] ./qp.cx[0x400dad]
+[winston:46932] [ 9] [18] ./qp.cx[0x400dad]
+[roadhog:35289] [19] ./qp.cx[0x400dad]
+[roadhog:35289] [20] ./qp.cx[0x400dad]
+./qp.cx[0x400dad]
+[winston:46932] [10] ./qp.cx[0x400dad]
+[winston:46932] [11] ./qp.cx[0x400dad]
+[winston:46932] [12] ./qp.cx[0x400dad]
+[roadhog:35289] [21] ./qp.cx[0x400dad]
+[roadhog:35289] [22] ./qp.cx[0x400dad]
+[roadhog:35289] [23] ./qp.cx[0x400dad]
+[roadhog:35289] [24] ./qp.cx[0x400dad]
+[roadhog:35289] [25] ./qp.cx[0x400dad]
+[roadhog:35289] [winston:46932] [13] ./qp.cx[0x400dad]
+[winston:46932] [14] ./qp.cx[0x400dad]
+[winston:46932] [15] [26] ./qp.cx[0x400dad]
+[roadhog:35289] [27] ./qp.cx[0x400dad]
+[roadhog:35289] [28] ./qp.cx[0x400dad]
+./qp.cx[0x400dad]
+[winston:46932] [16] ./qp.cx[0x400dad]
+[winston:46932] [17] ./qp.cx[0x400dad]
+[winston:46932] [18] ./qp.cx[0x400dad]
+[winston:46932] [19] ./qp.cx[0x400dad]
+[roadhog:35289] [29] ./qp.cx[0x400dad]
+[roadhog:35289] *** End of error message ***
+[winston:46932] [20] ./qp.cx[0x400dad]
+[winston:46932] [21] ./qp.cx[0x400dad]
+[winston:46932] [22] [lucio:15364] [ 0] /lib/x86_64-linux-gnu/libc.so.6(+0x354b0)[0x7f9544fc84b0]
+[lucio:15364] [ 1] ./qp.cx[0x400dad]
+[winston:46932] [23] ./qp.cx[0x400dad]
+[winston:46932] [24] ./qp.cx[0x400dad]
+[winston:46932] [25] ./qp.cx[0x400dad]
+./qp.cx[0x400cfb]
+[lucio:15364] [ 2] ./qp.cx[0x400dad]
+[lucio:15364] [ 3] ./qp.cx[0x400dad]
+[lucio:15364] [ 4] ./qp.cx[0x400dad]
+[lucio:15364] [ 5] ./qp.cx[0x400dad]
+[lucio:15364] [ 6] ./qp.cx[0x400dad]
+[lucio:15364] [ 7] ./qp.cx[0x400dad]
+[lucio:15364] [ 8] ./qp.cx[0x400dad]
+[lucio:15364] [ 9] ./qp.cx[0x400dad]
+[lucio:15364] [10] ./qp.cx[0x400dad]
+[sombra:19803] *** Process received signal ***
+[sombra:19803] Signal: Segmentation fault (11)
+[sombra:19803] Signal code: Address not mapped (1)
+[sombra:19803] Failing at address: 0x175d000
+[winston:46932] [26] ./qp.cx[0x400dad]
+[winston:46932] [27] ./qp.cx[0x400dad]
+[winston:46932] [28] ./qp.cx[0x400dad]
+[lucio:15364] [11] ./qp.cx[0x400dad]
+[lucio:15364] [12] ./qp.cx[0x400dad]
+[lucio:15364] [13] ./qp.cx[0x400dad]
+[lucio:15364] [winston:46932] [29] ./qp.cx[0x400dad]
+[winston:46932] *** End of error message ***
+[14] ./qp.cx[0x400dad]
+[lucio:15364] [15] ./qp.cx[0x400dad]
+[lucio:15364] [16] ./qp.cx[0x400dad]
+[lucio:15364] [17] ./qp.cx[0x400dad]
+[lucio:15364] [18] ./qp.cx[0x400dad]
+[lucio:15364] [19] ./qp.cx[0x400dad]
+[lucio:15364] [20] ./qp.cx[0x400dad]
+[lucio:15364] [21] ./qp.cx[0x400dad]
+[lucio:15364] [22] ./qp.cx[0x400dad]
+[lucio:15364] [23] ./qp.cx[0x400dad]
+[lucio:15364] [24] ./qp.cx[0x400dad]
+[lucio:15364] [25] ./qp.cx[0x400dad]
+[lucio:15364] [26] ./qp.cx[0x400dad]
+[lucio:15364] [27] ./qp.cx[0x400dad]
+[lucio:15364] [28] ./qp.cx[0x400dad]
+[lucio:15364] [29] ./qp.cx[0x400dad]
+[lucio:15364] *** End of error message ***
+qp.cx: malloc.c:2394: sysmalloc: Assertion `(old_top == initial_top (av) && old_size == 0) || ((unsigned long) (old_size) >= MINSIZE && prev_inuse (old_top) && ((unsigned long) old_end & (pagesize - 1)) == 0)' failed.
+[sombra:19803] *** Process received signal ***
+[sombra:19803] Signal: Aborted (6)
+[sombra:19803] Signal code:  (-6)
+[mccree:48560] *** Process received signal ***
+[mccree:48560] Signal: Segmentation fault (11)
+[mccree:48560] Signal code: Address not mapped (1)
+[mccree:48560] Failing at address: 0x236e000
+[soldier:11479] *** Process received signal ***
+[soldier:11479] Signal: Segmentation fault (11)
+[soldier:11479] Signal code: Address not mapped (1)
+[soldier:11479] Failing at address: 0x11aa000
+qp.cx: malloc.c:2394: sysmalloc: Assertion `(old_top == initial_top (av) && old_size == 0) || ((unsigned long) (old_size) >= MINSIZE && prev_inuse (old_top) && ((unsigned long) old_end & (pagesize - 1)) == 0)' failed.
+[mccree:48560] *** Process received signal ***
+[mccree:48560] Signal: Aborted (6)
+[mccree:48560] Signal code:  (-6)
+[orisa:26443] *** Process received signal ***
+[orisa:26443] Signal: Segmentation fault (11)
+[orisa:26443] Signal code: Address not mapped (1)
+[orisa:26443] Failing at address: 0xb6b000
+qp.cx: malloc.c:2394: sysmalloc: Assertion `(old_top == initial_top (av) && old_size == 0) || ((unsigned long) (old_size) >= MINSIZE && prev_inuse (old_top) && ((unsigned long) old_end & (pagesize - 1)) == 0)' failed.
+[soldier:11479] *** Process received signal ***
+[soldier:11479] Signal: Aborted (6)
+[soldier:11479] Signal code:  (-6)
+[zarya:28352] *** Process received signal ***
+[zarya:28352] Signal: Segmentation fault (11)
+[zarya:28352] Signal code: Address not mapped (1)
+[zarya:28352] Failing at address: 0xd34000
+qp.cx: malloc.c:2394: sysmalloc: Assertion `(old_top == initial_top (av) && old_size == 0) || ((unsigned long) (old_size) >= MINSIZE && prev_inuse (old_top) && ((unsigned long) old_end & (pagesize - 1)) == 0)' failed.
+[zarya:28352] *** Process received signal ***
+[zarya:28352] Signal: Aborted (6)
+[zarya:28352] Signal code:  (-6)
+[tracer:37574] *** Process received signal ***
+[tracer:37574] Signal: Segmentation fault (11)
+[tracer:37574] Signal code: Address not mapped (1)
+[tracer:37574] Failing at address: 0x261e000
+[reaper:27301] *** Process received signal ***
+[reaper:27301] Signal: Segmentation fault (11)
+[reaper:27301] Signal code: Address not mapped (1)
+[reaper:27301] Failing at address: 0x1fce000
+qp.cx: malloc.c:2394: sysmalloc: Assertion `(old_top == initial_top (av) && old_size == 0) || ((unsigned long) (old_size) >= MINSIZE && prev_inuse (old_top) && ((unsigned long) old_end & (pagesize - 1)) == 0)' failed.
+[tracer:37574] *** Process received signal ***
+[tracer:37574] Signal: Aborted (6)
+[tracer:37574] Signal code:  (-6)
+-------------------------------------------------------
+Primary job  terminated normally, but 1 process returned
+a non-zero exit code. Per user-direction, the job has been aborted.
+-------------------------------------------------------
+--------------------------------------------------------------------------
+mpiexec noticed that process rank 1 with PID 46932 on node winston exited on signal 11 (Segmentation fault).
+--------------------------------------------------------------------------
+3 total processes killed (some possibly by mpiexec during cleanup)
