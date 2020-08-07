@@ -12,7 +12,8 @@ void merge(int arr[], int l, int m, int r)
     int n2 = r - m; 
   
     /* create temp arrays */
-    int L[n1], R[n2]; 
+    int *L = (int *)malloc(n1*sizeof(int));
+    int *R = (int *)malloc(n2*sizeof(int)); 
   
     /* Copy data to temp arrays L[] and R[] */
     for (i = 0; i < n1; i++) 
@@ -81,62 +82,74 @@ void printArray(int A[], int size)
 } 
   
 /* Driver program to test above functions */
-void main(int argc, char **argv) 
-{ 
-    int numranks, rank;
-    // MPI INIT
-    MPI_Init(&argc,&argv);
-    MPI_Comm_size(MPI_COMM_WORLD,&numranks);
-    MPI_Comm_rank(MPI_COMM_WORLD,&rank);
-    if(rank == 0){
-    	if(argc < 2){
-        	printf("Please give the number of elements you would like to sort and try again.\n");
-       	 	MPI_Finalize();
-    	}
-    }
-    int n = atoi(argv[1]);
-    if(n%numranks != 0){
-	printf("Please give a value for n that is divisiable by the number of ranks\n");
-        MPI_Finalize();
-    }
-    int *arr =(int *)malloc(n*sizeof(int));
-    for(int i = 0; i < n; i++){
-        int random_number = rand() % 100 + 1;
-        arr[i] = random_number;
-	}
-    //Splitting up the work.
-    int split = n/numranks;
-    int myStart = rank*split;
-    int myEnd = (rank+1) * split -1;
+int main(int argc, char **argv) 
+{
+   int numranks, rank;
+   // initialize MPI
+   MPI_Init(&argc,&argv);
+   MPI_Comm_size(MPI_COMM_WORLD,&numranks);
+   MPI_Comm_rank(MPI_COMM_WORLD,&rank);
+   if(rank == 0){
+        if(argc < 2){
+             printf("Please give the number of elements you would like to sort and try again.\n");
+             MPI_Finalize();
+        }
+   }
+   double startTime = MPI_Wtime();
+   int n = atoi(argv[1]);
+   int *arr = (int *)malloc(n*sizeof(int));
+   //Creating Values
+   //Decided it would be faster for every rank to do this work
+   //vs. send it over the communicator. Maybe not tho we can see
+   if(rank == 0){
+   	for(int i = 0; i < n; i++){
+   		int random_number = rand() % 100 + 1;
+        	arr[i] = random_number;
+   	}
+   }
+   //Giving every rank the array
+   MPI_Bcast(arr, n, MPI_INT, 0, MPI_COMM_WORLD);
 
-    //Creating temp array
-    int* t = (int*)malloc(split*sizeof(int));
-    
-    if(rank == numranks-1){
+   //Splitting up the work.
+   int split = n / numranks;
+   int myStart = rank * split;
+   int myEnd = (rank+1) * split -1;
+   if(rank == numranks-1){
 	myEnd = n;
-    }
-    // Adding approperate values to temp arrays
-    int c = 0;
-    for(int i = myStart; i <= myEnd; i++){
+   }
+   printf("Rank: %d, split: %d, myStart: %d, myEnd: %d\n",rank, split, myStart, myEnd);
+   //Creating and populating temp array
+   int *t =(int *)malloc(split*sizeof(int));
+   int c = 0;
+   for(int i = myStart; c<split; i++){
 	t[c] = arr[i];
-        c++;
-    }    
-
-    if(rank ==0){
-    	printf("Given array is \n"); 
-    	printArray(arr, n); 
-	}
-    mergeSort(t, myStart, myEnd-1);
-
-    MPI_Gather(t, split, MPI_INT, arr, split, MPI_INT, 0, MPI_COMM_WORLD);
-
-    if(rank == 0){
-	if(numranks > 1){
-		mergeSort(arr, 0 , n-1);
-	}  
-    	printf("\nSorted array is \n"); 
-    	printArray(arr, n);
-    }
-    MPI_Finalize();
- }
+	c++;
+   }
+   printf("Rank: %d Array: \n",rank);
+   printArray(t, split);
+   printf("\n");
+   if(rank == 0){ 
+   	printf("Given array is \n"); 
+   	printArray(arr, n); 
+  }
+   if(rank == 0){
+   	mergeSort(t, myStart, myEnd -1);
+   }
+   printf("Rank: %d, After mergesort \n",rank); 
+   MPI_Gather(t, split, MPI_INT, arr, split, MPI_INT, 0, MPI_COMM_WORLD);
  
+   if(rank == 0){
+	printf("Array after gather\n");
+	printArray(arr, n);
+	int m = n / 2;
+	printf("Before final merge\n");
+	merge(arr, 0, m, n);
+   	printf("\nSorted array is \n"); 
+   	printArray(arr, n);
+   }
+   double endTime = MPI_Wtime();
+   MPI_Finalize();
+
+   printf("Time: .5%f\n", endTime -startTime);
+   return 0; 
+} 
