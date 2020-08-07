@@ -46,12 +46,12 @@ int main(int argc, char **argv) {
     MPI_Comm_size(MPI_COMM_WORLD, &numranks);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Status stat;
-	int n = 1000;
-	int myN = n / numranks;
+    int n = 1000;
+    int myN = n / numranks;
     int *globaldata;
     int *localdata = (int *)malloc(myN * sizeof(int));
-	int *finaldata;
-	int pivot;
+    int *finaldata;
+    int pivot;
     int i;
 
     if (rank == 0) {
@@ -76,7 +76,6 @@ int main(int argc, char **argv) {
         else {
             higher[i] = localdata[i];
         }
-	}
     //Higher rank is receving the higher data from the lower rank and sending it's low list to lower rank
     if(rank == 1) {
         MPI_Recv(higher, myN/2, MPI_INT, 0, 0, MPI_COMM_WORLD, &stat);
