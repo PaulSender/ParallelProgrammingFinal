@@ -162,11 +162,9 @@ int main(int argc, char ** argv)
     double endTime = MPI_Wtime();
     if (rank == 0) {
         for (i = 0; i < subSize; i++)
-            printf("%d ", sub[i]);
-        printf("\n");
-        printf("\n");
-        printf("\n");
-        printf("Quicksort %d ints on %d procs: %f secs\n", n, numranks, endTime-startTime);
+            //printf("%d ", sub[i]);
+            
+        printf("%f\n", endTime-startTime);
     }
 
     MPI_Finalize();
