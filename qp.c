@@ -1,47 +1,36 @@
-#include <mpi.h>
 #include <stdio.h>
 #include <stdlib.h>
-void swap(int* a, int* b) 
-{ 
-    int t = *a; 
-    *a = *b; 
-    *b = t; 
-} 
+#include <mpi.h>
+#include <time.h>
 
-int partition (int arr[], int low, int high) 
-{ 
-    int pivot = arr[high];    // pivot 
-    int i = (low - 1);  // Index of smaller element 
-  
-    for (int j = low; j <= high- 1; j++) 
-    { 
-        // If current element is smaller than the pivot 
-        if (arr[j] < pivot) 
-        { 
-            i++;    // increment index of smaller element 
-            swap(&arr[i], &arr[j]); 
-        } 
-    } 
-    swap(&arr[i + 1], &arr[high]); 
-    return (i + 1); 
-} 
+double startTime;
 
-void quickSort(int arr[], int low, int high) {
-	if (low < high) {
-		int pi = partition(arr, low, high); 
-  
-        // Separately sort elements before 
-        // partition and after partition 
-        quickSort(arr, low, pi - 1); 
-        quickSort(arr, pi + 1, high);
-	}
+
+//static inline /* this improves performance; Exercise: by how much? */
+// swap helper function 
+void swap(int * sub, int a, int b)
+{
+    int t = sub[a];
+    sub[a] = sub[b];
+    sub[b] = t;
 }
 
+// Main quicksort method adapted to use each rank's sub array and respective high and low points
+/*
+    1. Recursive function that picks a pivot somewhere in the middle of the sub array
+    2. Swap the pivot and first element (some algorithms don't do this but it worked with this one)
+    3. Partition the sub array starting at it's respective "low" element
+        A. If the current element is less than the pivot element
+        a. increment partitioning index to keep track of where to swap 
+        b. swap the current index and the partitioning index
+        c. when loop breaks, swap the low and partitioning index to insure the pivot is back in the correct place
+    4. Recurse quicksort on lower half of the array
+    5. Recurse on array after step 4 to sort the higher half of the sub array
 
 
-int main(int argc, char **argv) {
-    int numranks, rank;
+*/
 
+<<<<<<< HEAD
     MPI_Init(&argc, &argv);
     MPI_Comm_size(MPI_COMM_WORLD, &numranks);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -53,29 +42,51 @@ int main(int argc, char **argv) {
     int *finaldata;
     int pivot;
     int i;
+=======
+>>>>>>> b7a47c8535baaa2de6f111b09b0121cfd04281bc
 
-    if (rank == 0) {
-		globaldata = (int *)malloc(n * sizeof(int));
-		finaldata = (int *)malloc(n *sizeof(int));
-		for (int i = 0; i < n; i++) {
-			globaldata[i] = rand() % n;
-		}
-		pivot = globaldata[rand() % n];
-    }
-	MPI_Bcast(&pivot, 1, MPI_INT, 0, MPI_COMM_WORLD);
-	
-	
-    MPI_Scatter(globaldata, myN, MPI_INT, localdata, myN, MPI_INT, 0, MPI_COMM_WORLD);
-	printf("rank %d unsorted array is: ", rank);
-    int *lower = (int *)malloc((myN/2) * sizeof(int));
-    int *higher = (int *)malloc((myN/2) * sizeof(int));
-	for (int i = 0; i < myN; i++) {
-		if(localdata[i] < pivot) {
-            lower[i] = localdata[i];
+void quicksort(int * sub, int low, int high)
+{
+    
+    // base case?
+    if (high <= 1)
+        return;
+    // find pivot and swap with first element (pivot has to be in the center of the sub array)
+    int x = low+high/2;
+    int pivot = sub[x];
+    swap(sub, low, x);
+    // partition sub array starting at it's respective low element
+    // pi = partitioning index
+    int pi = low;
+    for (int i = low+1; i < low+high; i++)
+        if (sub[i] < pivot) {
+            pi++;
+            swap(sub, i, pi);
+            
         }
-        else {
-            higher[i] = localdata[i];
+    // swap pivot correctly
+    swap(sub, low, pi);
+
+    // recurse below partition
+    quicksort(sub, low, pi-low);
+    // recure above partition
+    quicksort(sub, pi+1, low+high-pi-1);
+}
+
+
+/* merge two sorted arrays v1, v2 of lengths n1, n2, respectively */
+int * merge(int * v1, int n1, int * v2, int n2)
+{
+    int * result = (int *)malloc((n1 + n2) * sizeof(int));
+    int i = 0;
+    int j = 0;
+    int k;
+    for (k = 0; k < n1 + n2; k++) {
+        if (i >= n1) {
+            result[k] = v2[j];
+            j++;
         }
+<<<<<<< HEAD
     //Higher rank is receving the higher data from the lower rank and sending it's low list to lower rank
     if(rank == 1) {
         MPI_Recv(higher, myN/2, MPI_INT, 0, 0, MPI_COMM_WORLD, &stat);
@@ -83,41 +94,123 @@ int main(int argc, char **argv) {
         printf("Rank %d: ", rank);
         for(int i = 0; i < myN/2; i++) {
             printf("%d ", higher[i]);
+=======
+        else if (j >= n2) {
+            result[k] = v1[i];
+            i++;
+>>>>>>> b7a47c8535baaa2de6f111b09b0121cfd04281bc
         }
-        printf("\n");
-    }
-    //Lower rank is receiving the lower data from the higher rank and sending the higher list to the higher rank
-    else {
-        MPI_Send(higher, myN/2, MPI_INT, 1, 0, MPI_COMM_WORLD);
-        MPI_Recv(lower, myN/2, MPI_INT, 1, 0, MPI_COMM_WORLD, &stat);
-          printf("Rank %d: ", rank);
-        for(int i = 0; i < myN/2; i++) {
-            printf("%d ", lower[i]);
+        else if (v1[i] < v2[j]) { // indices in bounds as i < n1 && j < n2
+            result[k] = v1[i];
+            i++;
         }
-        printf("\n");
+        else { // v2[j] <= v1[i]
+            result[k] = v2[j];
+            j++;
+        }
     }
-	printf("\n");
+    return result;
+}
 
-	//quickSort(localdata, 0, myN - 1);
-	//printf("rank %d sorted array is: ", rank);
-	// for (int i = 0; i < myN; i++) {
-	// 	printf("%d ", localdata[i]);
-	// }
-    
-	// printf("\n");
+int main(int argc, char ** argv)
+{
+    int n;
+    int * data = NULL;
+    int c, s;
+    int * chunk;
+    int o;
+    int * other;
+    int step;
+    int p, rank;
+    MPI_Status status;
+    double elapsed_time;
+    int i;
 
-    MPI_Gather(localdata, myN, MPI_INT, finaldata, myN, MPI_INT, 0, MPI_COMM_WORLD);
+    if (argc < 2) {
+        printf("Please give the number of elements you would like to sort and try again.\n");
+        MPI_Finalize();
+    }
+
+    MPI_Init(&argc, &argv);
+    MPI_Comm_size(MPI_COMM_WORLD, &p);
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
     if (rank == 0) {
-		//quickSort(finaldata, 0, n-1);
-		printf("Final Result: ");
-     for(int i = 0; i < 4; i++) {
-		 printf("%d ", finaldata[i]);
-	 }
+        // read size of data
+        // file = fopen(argv[1], "r");
+        // fscanf(file, "%d", &n);
+        // compute chunk size
+        n = atoi(argv[1]);
+        c = (n%p!=0) ? n/p+1 : n/p;
+        // read data from file
+        data = (int *)malloc(p*c * sizeof(int));
+        for(int i = 0; i < n; i++) {
+            data[i] = rand() % n;
+            //printf("%d ", data[i]);
+        }
+        // pad data with 0 -- doesn't matter
+        // for (i = n; i < p*c; i++)
+        //   data[i] = 0;
     }
 
+    // start the timer
+    MPI_Barrier(MPI_COMM_WORLD);
+    elapsed_time = -MPI_Wtime();
+
+    // broadcast size
+    MPI_Bcast(&n, 1, MPI_INT, 0, MPI_COMM_WORLD);
+
+    // compute chunk size
+    c = (n%p!=0) ? n/p+1 : n/p;
+
+    // scatter data
+    chunk = (int *)malloc(c * sizeof(int));
+    MPI_Scatter(data, c, MPI_INT, chunk, c, MPI_INT, 0, MPI_COMM_WORLD);
+    free(data);
+    data = NULL;
+
+    // compute size of own chunk and sort it
+    s = (n >= c * (rank+1)) ? c : n - c * rank;
+    quicksort(chunk, 0, s);
+
+    // up to log_2 p merge steps
+    for (step = 1; step < p; step = 2*step) {
+        if (rank % (2*step) != 0) {
+            // rank is no multiple of 2*step: send chunk to rank-step and exit loop
+            MPI_Send(chunk, s, MPI_INT, rank-step, 0, MPI_COMM_WORLD);
+            break;
+        }
+        // rank is multiple of 2*step: merge in chunk from rank+step (if it exists)
+        if (rank+step < p) {
+            // compute size of chunk to be received
+            o = (n >= c * (rank+2*step)) ? c * step : n - c * (rank+step);
+            // receive other chunk
+            other = (int *)malloc(o * sizeof(int));
+            MPI_Recv(other, o, MPI_INT, rank+step, 0, MPI_COMM_WORLD, &status);
+            // merge and free memory
+            data = merge(chunk, s, other, o);
+            free(chunk);
+            free(other);
+            chunk = data;
+            s = s + o;
+        }
+    }
+
+    // stop the timer
+    elapsed_time += MPI_Wtime();
+
+    // write sorted data to out file and print out timer
+    if (rank == 0) {
+        for (i = 0; i < s; i++)
+            printf("%d ", chunk[i]);
+        printf("\n");
+        printf("\n");
+        printf("\n");
+        //   fprintf(file, "%d\n", chunk[i]);
+        // fclose(file);
+        printf("Quicksort %d ints on %d procs: %f secs\n", n, p, elapsed_time);
+    }
 
     MPI_Finalize();
     return 0;
 }
-
