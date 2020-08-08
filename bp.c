@@ -54,11 +54,18 @@ void main (int argc, char **argv){
         	arr[i] = random_number;
         	}
 	
-	//Splitting up the work.
-	int split = n / numranks;
-	int myStart = rank * split;
-	int myEnd = (rank+1) * split -1 ;
-
+	//Splitting up the work so rank 0 does nothing.
+	int split = n / (numranks-1);
+	int myStart;
+	int myEnd;
+	if(rank == 0){
+		myStart = 0;
+		myEnd = 0;
+	}
+	else{
+		myStart = (rank-1) * split;
+		myEnd = rank *split -1;
+	}
 	//Creating temp array
 	int* t =(int*)malloc(split*sizeof(int));
 
@@ -76,21 +83,32 @@ void main (int argc, char **argv){
 		c++;
 	}
 	//checks
-	//printf("Before Sort from Rank: %d\n", rank);
-	//printArray(t, split);
 
+	int *revArr = (int *)malloc(numranks*sizeof(int));
+	int *disp = (int *)malloc(numranks*sizeof(int));
+	revArr[0] = 0;
+	disp[0] = 0;
+	disp[1] = 0;
+	disp[2] = 5;
+	for(int i = 1; i < numranks; i++){
+		revArr[i] = split;
+	}
+	//for(int j = 1; j< numranks; j++){
+	//	disp[j] = rank-1 * split;
+	//}
 	bubbleSort(t, split);
  
-	//printf("After Sort from Rank: %d\n", rank);
-        //printArray(t, split);
+	printf("After Sort from Rank: %d\n", rank);
+        printArray(t, split);
 
-	MPI_Gather(t, split, MPI_INT, arr, split, MPI_INT, 0, MPI_COMM_WORLD);
+	free(arr);
+	MPI_Gatherv(t, split, MPI_INT, arr, revArr, disp, MPI_INT, 0, MPI_COMM_WORLD);
 	
 	if(rank == 0){
-		//printf("After gather: \n");
-		//printArray(arr,n);
+		printf("After gather: \n");
+		printArray(arr,n);
 
-		bubbleSort(arr,n);
+		//bubbleSort(arr,n);
 
 		//printf("Sorted array: \n"); 
     		//printArray(arr, n);
@@ -101,5 +119,3 @@ void main (int argc, char **argv){
     free(arr);
     MPI_Finalize();  
    }
-
-
