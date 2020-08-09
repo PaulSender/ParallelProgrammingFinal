@@ -1,5 +1,5 @@
-FCC = mpicc
-LDC = mpicc
+FCC = tau_cc.sh
+LDC = tau_cc.sh
 LD_FLAGS =  
 FLAGS = 
 RM = /bin/rm

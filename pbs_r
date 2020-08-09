@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -l nodes=2:ppn=12
+#PBS -l nodes=4:ppn=12
 #PBS -l walltime=00:01:00
 #PBS -q batch
 #PBS -N o
@@ -7,7 +7,7 @@
 
 #export OMP_NUM_THREADS=4
 cd ~/ParallelProgrammingFinal
-mpiexec -np 2 --map-by ppr:1:node --hostfile $PBS_NODEFILE ./mp.cx 10
+mpiexec -np 4 --map-by ppr:1:node --hostfile $PBS_NODEFILE ./mp.cx 1000000
 
 #mpiexec -np 2 --map-by ppr:1:node --hostfile $PBS_NODEFILE valgrind --tool=memcheck --leak-check=yes -v --leak-check=full --track-origins=yes --log-file=vg.%p ./rp.cx 1000
 

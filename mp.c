@@ -26,7 +26,7 @@ void merge(int arr[], int l, int m, int r)
     j = 0; // Initial index of second subarray 
     k = l; // Initial index of merged subarray 
     while (i < n1 && j < n2) { 
-        if (L[i] <= R[j]) { 
+        if (L[i] <= R[j]) {
             arr[k] = L[i]; 
             i++; 
         } 
@@ -36,7 +36,7 @@ void merge(int arr[], int l, int m, int r)
         } 
         k++; 
     } 
-  
+
     /* Copy the remaining elements of L[], if there 
        are any */
     while (i < n1) { 
@@ -51,7 +51,8 @@ void merge(int arr[], int l, int m, int r)
         arr[k] = R[j]; 
         j++; 
         k++; 
-    } 
+    }
+    
 } 
   
 /* l is for left index and r is right index of the 
@@ -97,7 +98,7 @@ int main(int argc, char **argv)
 		printf("Please give number of elements you would like to sort and try again");
 		MPI_Finalize();
 	}    
-	if(rank ==0){
+	if(rank == 0){
 		n = atoi(argv[1]);
 		if(n%numranks !=0){
 			size = n/numranks+1;
@@ -136,13 +137,14 @@ int main(int argc, char **argv)
 	//printArray(sub, size);
 	MPI_Gather(sub, size, MPI_INT, data, size, MPI_INT,0, MPI_COMM_WORLD);
 	if(rank == 0){
-		printf("After Gather: \n");
-		printArray(data, size * numranks);
-		int m = (size * numranks) /2; 
-		merge(data, 0, m , (size*numranks)+1);
-		printf("after merge: \n");
-		printArray(data, size * numranks);
-		//printf("done");
+		//printf("After Gather: \n");
+		//printArray(data, size * numranks);
+		if(numranks != 1){
+			mergeSort(data, 0, size*numranks);
+		}
+		//printf("after mergeSort(2): \n");
+		//printArray(data, size * numranks);
+		printf("done");
 	} 
 	MPI_Finalize();
 	return 0;
