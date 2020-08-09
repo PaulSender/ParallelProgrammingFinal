@@ -140,11 +140,13 @@ int main(int argc, char **argv)
 		//printf("After Gather: \n");
 		//printArray(data, size * numranks);
 		if(numranks != 1){
-			mergeSort(data, 0, size*numranks);
+			//mergeSort(data, 0, size*numranks);
+			merge(data, 0, n/2, n);
 		}
 		//printf("after mergeSort(2): \n");
 		//printArray(data, size * numranks);
-		printf("done");
+		double endTime = MPI_Wtime();
+		printf("Numranks: %d, N: %d, Time: %f\n",numranks, n, (endTime-startTime));
 	} 
 	MPI_Finalize();
 	return 0;

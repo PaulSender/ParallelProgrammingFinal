@@ -58,7 +58,6 @@ void main (int argc, char **argv){
 	}
 	MPI_Barrier(MPI_COMM_WORLD);
 	double startTime = MPI_Wtime();
-
 	MPI_Bcast(&n, 1, MPI_INT, 0, MPI_COMM_WORLD);
 	
  	if(n%numranks !=0){
@@ -78,8 +77,10 @@ void main (int argc, char **argv){
 	MPI_Gather(sub, size, MPI_INT, data, size, MPI_INT, 0, MPI_COMM_WORLD);
 	if(rank == 0){
 		bubbleSort(data, size*numranks);
-		printf("Done");
+		double endTime = MPI_Wtime();
+		printf("Numranks: %d, N: %d, Time: %f\n",numranks, n, endTime-startTime);
+		
 	}
-   	//free(arr);
+   	free(data);
    	MPI_Finalize();  
    }
