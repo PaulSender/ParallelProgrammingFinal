@@ -31,7 +31,9 @@ void printArray(int arr[], int size)
 
 void main (int argc, char **argv){
 
-	int numranks, rank, rc;
+	int numranks, rank, n, size;
+	int *data = NULL;
+	int *sub;
 	// initialize MPI
 	MPI_Init(&argc,&argv);
 	MPI_Comm_size(MPI_COMM_WORLD,&numranks);
@@ -39,83 +41,41 @@ void main (int argc, char **argv){
 	if(rank == 0){
 		if(argc < 2){
      			printf("Please give the number of elements you would like to sort and try again.\n");
-			MPI_Finalize();
-        	
+		MPI_Finalize();
     	}
+	n = atoi(argv[1]);
+		if(n%numranks != 0){
+			size = n/numranks+1;
+		}
+		else{
+			size = n/numranks;
+		}
+		data = (int *)malloc(numranks * size * sizeof(int));
+		//Randomly assign values to array
+		for(int i = 0; i < n; i++){
+			data[i] = rand() %n;
+		}
 	}
-	double startTime = MPI_Wtime();    	
-   	int n = atoi(argv[1]);
-   	int *arr = (int *)malloc(n*sizeof(int));
-	//Creating Values
-	//Decided it would be faster for every rank to do this work
-	//vs. send it over the communicator. Maybe not tho we can see
-    	for(int i = 0; i < n; i++){
-        	int random_number = rand() % 100 + 1;
-        	arr[i] = random_number;
-        	}
+	MPI_Barrier(MPI_COMM_WORLD);
+	double startTime = MPI_Wtime();
+
+	MPI_Bcast(&n, 1, MPI_INT, 0, MPI_COMM_WORLD);
 	
-	//Splitting up the work so rank 0 does nothing.
-	int split = n / (numranks-1);
-	int myStart;
-	int myEnd;
-	if(rank == 0){
-		myStart = 0;
-		myEnd = 0;
-	}
+ 	if(n%numranks !=0){
+		size = n/numranks+1;
+	}	   	
 	else{
-		myStart = (rank-1) * split;
-		myEnd = rank *split -1;
+		size = n/numranks;
 	}
-	//Creating temp array
-	int* t =(int*)malloc(split*sizeof(int));
-
-	if(rank == numranks -1){
-		myEnd = n;
-	}
-	//if(rank == 0){
-	//	printf("Starting array: \n");
-	//	printArray(arr, n); 
-	//}
-	//Assigning correct values to temp array
-	int c = 0;
-	for(int i = myStart; i <= myEnd; i++){
-		t[c] = arr[i];
-		c++;
-	}
-	//checks
-
-	int *revArr = (int *)malloc(numranks*sizeof(int));
-	int *disp = (int *)malloc(numranks*sizeof(int));
-	revArr[0] = 0;
-	disp[0] = 0;
-	disp[1] = 0;
-	disp[2] = 5;
-	for(int i = 1; i < numranks; i++){
-		revArr[i] = split;
-	}
-	//for(int j = 1; j< numranks; j++){
-	//	disp[j] = rank-1 * split;
-	//}
-	bubbleSort(t, split);
- 
-	printf("After Sort from Rank: %d\n", rank);
-        printArray(t, split);
-
-	free(arr);
-	MPI_Gatherv(t, split, MPI_INT, arr, revArr, disp, MPI_INT, 0, MPI_COMM_WORLD);
+	//scatter data
+	sub = (int *)malloc(size * sizeof(int));
+	MPI_Scatter(data, size, MPI_INT, sub, size, MPI_INT, 0, MPI_COMM_WORLD);
 	
-	if(rank == 0){
-		printf("After gather: \n");
-		printArray(arr,n);
-
-		//bubbleSort(arr,n);
-
-		//printf("Sorted array: \n"); 
-    		//printArray(arr, n);
-		double endtime = MPI_Wtime();
-		printf("NumRanks: %d, Time: %.5f\n",numranks, endtime-startTime); 
-	}
-
-    free(arr);
-    MPI_Finalize();  
+	bubbleSort(sub,size);
+	//printf("Rank: %d, sub: \n",rank);
+	//printArray(sub,size); 
+	
+	printf("Done");
+   	//free(arr);
+   	MPI_Finalize();  
    }

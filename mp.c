@@ -136,13 +136,13 @@ int main(int argc, char **argv)
 	//printArray(sub, size);
 	MPI_Gather(sub, size, MPI_INT, data, size, MPI_INT,0, MPI_COMM_WORLD);
 	if(rank == 0){
-		//printf("After Gather: \n");
-		//printArray(data, size * numranks);
+		printf("After Gather: \n");
+		printArray(data, size * numranks);
 		int m = (size * numranks) /2; 
 		merge(data, 0, m , (size*numranks)+1);
-		//printf("after merge: \n");
-		//printArray(data, size * numranks);
-		printf("done");
+		printf("after merge: \n");
+		printArray(data, size * numranks);
+		//printf("done");
 	} 
 	MPI_Finalize();
 	return 0;
