@@ -75,7 +75,11 @@ void main (int argc, char **argv){
 	//printf("Rank: %d, sub: \n",rank);
 	//printArray(sub,size); 
 	
-	printf("Done");
+	MPI_Gather(sub, size, MPI_INT, data, size, MPI_INT, 0, MPI_COMM_WORLD);
+	if(rank == 0){
+		bubbleSort(data, size*numranks);
+		printf("Done");
+	}
    	//free(arr);
    	MPI_Finalize();  
    }

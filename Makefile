@@ -1,11 +1,11 @@
-FCC = tau_cc.sh
-LDC = tau_cc.sh
+FCC = mpicc
+LDC = mpicc
 LD_FLAGS =  
 FLAGS = 
 RM = /bin/rm
-PROG = mp.cx
+PROG = bp.cx
 RM = /bin/rm
-OBJS = mp.o
+OBJS = bp.o
 
 #all rule
 all: $(PROG)
