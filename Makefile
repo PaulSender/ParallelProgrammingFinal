@@ -1,10 +1,11 @@
 FCC = mpicc
 LDC = mpicc
 LD_FLAGS =  
-FLAGS =
-PROG = quick.cx
+FLAGS = 
 RM = /bin/rm
-OBJS = quick.o
+PROG = mp.cx
+RM = /bin/rm
+OBJS = mp.o
 
 #all rule
 all: $(PROG)
