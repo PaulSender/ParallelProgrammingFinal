@@ -1,11 +1,10 @@
-FCC = tau_cc.sh
-LDC = tau_cc.sh
-LD_FLAGS =
+FCC = mpicc
+LDC = mpicc
+LD_FLAGS =  
 FLAGS =
+PROG = quick.cx
 RM = /bin/rm
-PROG = rp.cx
-RM = /bin/rm
-OBJS = rp.o
+OBJS = quick.o
 
 #all rule
 all: $(PROG)
@@ -17,4 +16,4 @@ $(PROG): $(OBJS)
 	$(FCC) $(FLAGS) -c $<
 
 clean:
-	$(RM) -rf *.o $(PROG) *.mod out.*
+	$(RM) -rf *.o $(PROG) *.o*

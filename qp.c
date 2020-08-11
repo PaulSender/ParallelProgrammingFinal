@@ -24,25 +24,6 @@ void swap(int * sub, int a, int b)
 
 
 */
-<<<<<<< HEAD
-
-<<<<<<< HEAD
-    MPI_Init(&argc, &argv);
-    MPI_Comm_size(MPI_COMM_WORLD, &numranks);
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    MPI_Status stat;
-    int n = 1000;
-    int myN = n / numranks;
-    int *globaldata;
-    int *localdata = (int *)malloc(myN * sizeof(int));
-    int *finaldata;
-    int pivot;
-    int i;
-=======
->>>>>>> b7a47c8535baaa2de6f111b09b0121cfd04281bc
-
-=======
->>>>>>> ce0eeb5a8f13a229fba928fcfd6e53f84b3cffcf
 void quicksort(int * sub, int low, int high)
 {
 
@@ -83,19 +64,9 @@ int * merge(int * v1, int n1, int * v2, int n2)
             result[k] = v2[j];
             j++;
         }
-<<<<<<< HEAD
-    //Higher rank is receving the higher data from the lower rank and sending it's low list to lower rank
-    if(rank == 1) {
-        MPI_Recv(higher, myN/2, MPI_INT, 0, 0, MPI_COMM_WORLD, &stat);
-        MPI_Send(lower, myN/2, MPI_INT, 0, 0, MPI_COMM_WORLD);
-        printf("Rank %d: ", rank);
-        for(int i = 0; i < myN/2; i++) {
-            printf("%d ", higher[i]);
-=======
         else if (j >= n2) {
             result[k] = v1[i];
             i++;
->>>>>>> b7a47c8535baaa2de6f111b09b0121cfd04281bc
         }
         else if (v1[i] < v2[j]) {
             result[k] = v1[i];
@@ -123,6 +94,7 @@ int main(int argc, char ** argv)
     MPI_Init(&argc, &argv);
     MPI_Comm_size(MPI_COMM_WORLD, &numranks);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+     double startTime = MPI_Wtime();
     if (rank == 0) {
         n = atoi(argv[1]);
         if (n%numranks != 0) {
@@ -140,7 +112,7 @@ int main(int argc, char ** argv)
     // need a blocking call here to avoid segfault
     MPI_Barrier(MPI_COMM_WORLD);
     // start timer
-    double startTime = MPI_Wtime();
+   
     // broadcast size
     MPI_Bcast(&n, 1, MPI_INT, 0, MPI_COMM_WORLD);
     // compute sub size
@@ -190,10 +162,11 @@ int main(int argc, char ** argv)
     // stop the timer
     double endTime = MPI_Wtime();
     if (rank == 0) {
-        for (i = 0; i < subSize; i++)
+
+        // uncomment to check if sorting works
+        //for (i = 0; i < subSize; i++)
             //printf("%d ", sub[i]);
-            
-        printf("%f\n", endTime-startTime);
+        printf("%f,", endTime-startTime);
     }
 
     MPI_Finalize();
